@@ -11,31 +11,30 @@ provider "aws" {
   region = "ap-northeast-1"
 }
 
-resource "aws_vpc" "example" {
-  cidr_block = "10.0.0.0/16"
-}
+module "network" {
+  source = "./modules/network"
 
-resource "aws_subnet" "example" {
-  vpc_id            = aws_vpc.example.id
   availability_zone = "ap-northeast-1a"
   cidr_block        = "10.0.1.0/24"
 }
 
-resource "aws_security_group" "example" {
-  name   = "http_sg"
-  vpc_id = aws_vpc.example.id
+module "sg" {
+  source = "./modules/security_group"
 
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  vpc_id = module.network.vpc_id
+}
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+moved {
+  from = aws_vpc.example
+  to   = module.network.aws_vpc.example
+}
+
+moved {
+  from = aws_subnet.example
+  to   = module.network.aws_subnet.example
+}
+
+moved {
+  from = aws_security_group.example
+  to   = module.sg.aws_security_group.example
 }
