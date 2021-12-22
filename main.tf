@@ -11,7 +11,7 @@ provider "aws" {
   region = "ap-northeast-1"
 }
 
-module "network" {
+module "modified_network" {
   source = "./modules/network"
 
   availability_zone = "ap-northeast-1a"
@@ -21,5 +21,10 @@ module "network" {
 module "sg" {
   source = "./modules/security_group"
 
-  vpc_id = module.network.vpc_id
+  vpc_id = module.modified_network.vpc_id
+}
+
+moved {
+  from = module.network
+  to   = module.modified_network
 }
