@@ -23,18 +23,3 @@ module "sg" {
 
   vpc_id = module.network.vpc_id
 }
-
-moved {
-  from = aws_vpc.example
-  to   = module.network.aws_vpc.example
-}
-
-moved {
-  from = aws_subnet.example
-  to   = module.network.aws_subnet.example
-}
-
-moved {
-  from = aws_security_group.example
-  to   = module.sg.aws_security_group.example
-}
